@@ -335,19 +335,23 @@ function handleKeyPress(event) {
         sendMessage();
     }
 }
-
-// 发送消息
+/*发送消息*/
 async function sendMessage() {
     const input = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
     const message = input.value.trim();
 
     if (!message || !currentChatId) return;
+
+    // 锁定按钮
+    sendBtn.disabled = true;
+    sendBtn.textContent = currentLanguage === 'zh' ? "思考中..." : "Thinking...";
 
     // 添加用户消息
     addMessage(message, 'user');
     input.value = '';
 
-    // 添加 AI “思考中...”占位
+    // 添加 AI 占位
     addMessage("旅游助手 正在努力思考中💦...", 'ai');
 
     try {
@@ -365,14 +369,36 @@ async function sendMessage() {
 
         const data = await response.json();
         const aiReply = data.reply || "抱歉，旅游助手已经努力过了🥹";
-
         replaceLastAIMessage(aiReply);
 
     } catch (error) {
         replaceLastAIMessage("❌ 请求失败，请检查网络连接或稍后再问旅游助手😵");
         console.error("API 请求错误：", error);
+    } finally {
+        // 解锁按钮
+        sendBtn.disabled = false;
+        sendBtn.textContent = texts[currentLanguage].sendBtn;
     }
 }
+
+// 退出并返回欢迎页面
+function returnToWelcome() {
+    // 清除所有 active 页面
+    document.getElementById('chatPage').classList.remove('active');
+    document.getElementById('personaPage').classList.remove('active');
+    document.getElementById('welcomePage').classList.add('active');
+    currentPage = 'welcome';
+
+    // 清空聊天输入与内容
+    document.getElementById('messageInput').value = '';
+    document.getElementById('chatMessages').innerHTML = '';
+    document.getElementById('chatHistory').innerHTML = '';
+
+    // 重置状态
+    selectedPersona = null;
+    currentChatId = null;
+}
+
 
 // 添加消息到聊天界面
 function addMessage(text, sender) {
@@ -411,4 +437,5 @@ function replaceLastAIMessage(newText) {
 
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', init);
+
 
