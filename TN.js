@@ -360,11 +360,12 @@ async function sendMessage() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                message: message,
-                session_id: null,
-                history: []
-            })
+         body: JSON.stringify({
+            message: message,
+            session_id: currentChatId,
+            history: chatSessions.find(c => c.id === currentChatId)?.messages.map(m => [m.sender, m.text]) || [],
+            persona_key: selectedPersona
+         })
         });
 
         const data = await response.json();
@@ -438,3 +439,4 @@ function replaceLastAIMessage(newText) {
 
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', init);
+
