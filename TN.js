@@ -381,7 +381,7 @@ async function sendMessage() {
         sendBtn.textContent = texts[currentLanguage].sendBtn;
         input.focus(); // 自动聚焦回输入框
     }
-
+}
 // 退出并返回欢迎页面
 function returnToWelcome() {
     // 清除所有 active 页面
@@ -438,6 +438,7 @@ function replaceLastAIMessage(newText) {
 
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', init);
+
 
 
 
