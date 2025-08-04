@@ -360,6 +360,11 @@ body {
     border-color: #10b981;
 }
 
+.chat-input:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+}
+
 .send-btn {
     background: #10b981;
     color: white;
@@ -452,3 +457,4 @@ body {
 .exit-btn:hover {
     background-color: #c53030;
 }
+
