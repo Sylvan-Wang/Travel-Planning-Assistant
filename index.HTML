@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelNext - 欧洲旅行AI助手</title>
+    <link rel="stylesheet" href="TN.CSS">
+</head>
+<body>
+    <!-- 欢迎页面 -->
+    <div id="welcomePage" class="page active">
+        <div class="container">
+            <!-- 语言切换按钮 -->
+            <button class="language-toggle" onclick="toggleLanguage()" id="langBtn">EN</button>
+
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div class="current-time" id="currentTime"></div>
+                <div class="signal-icons">
+                    <div class="signal-dot"></div>
+                    <div class="signal-dot"></div>
+                    <div class="signal-dot"></div>
+                </div>
+            </div>
+
+            <!-- Logo -->
+            <div class="logo">
+                <div class="logo-symbol">∞</div>
+                <div class="logo-text">TravelNext</div>
+            </div>
+
+            <!-- 问候卡片 -->
+            <div class="card">
+                <div class="title-large" id="greeting">Good Morning, Traveler</div>
+                <div class="subtitle" id="todayText">Today is your day of travel</div>
+            </div>
+
+            <!-- AI助手卡片 -->
+            <div class="ai-card">
+                <div class="star-icon">⭐</div>
+                <div>
+                    <div style="font-weight: 600; color: #1f2937;" id="aiAssistantText">Your AI Travel Assistant</div>
+                    <div style="font-size: 14px; color: #6b7280;" id="aiSubtext">Ready to help plan your European adventure</div>
+                </div>
+            </div>
+
+            <!-- 开始按钮 -->
+            <button class="btn-gradient" onclick="showPersonaSelection()" id="startBtn">START</button>
+        </div>
+    </div>
+
+    <!-- Persona选择页面 -->
+    <div id="personaPage" class="page">
+        <div class="container">
+            <!-- 语言切换按钮 -->
+            <button class="language-toggle" onclick="toggleLanguage()" id="langBtn2">EN</button>
+
+            <div class="card">
+                <div class="title-large" id="personaTitle">对于这次欧洲旅行，什么对你来说最重要？</div>
+                
+                <div class="persona-option" onclick="selectPersona('planning')" id="planningOption">
+                    <strong>A. </strong><span id="planningText">确保行程顺利安全，时间安排合理，不出意外状况</span>
+                </div>
+                
+                <div class="persona-option" onclick="selectPersona('social')" id="socialOption">
+                    <strong>B. </strong><span id="socialText">和旅伴玩得开心，留下美好回忆，拍到满意的照片</span>
+                </div>
+                
+                <div class="persona-option" onclick="selectPersona('cultural')" id="culturalOption">
+                    <strong>C. </strong><span id="culturalText">深入感受当地文化，发现独特的地方，获得内心触动</span>
+                </div>
+                
+                <button class="btn-gradient" onclick="confirmPersona()" id="confirmBtn" style="margin-top: 24px;" disabled>确认选择</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 聊天界面 -->
+    <div id="chatPage" class="page chat-page">
+        <div class="chat-container">
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-title" id="chatHistoryTitle">聊天记录</div>
+                    <button class="new-chat-btn" onclick="createNewChat()" id="newChatBtn">新对话</button>
+                </div>
+                <div class="chat-history" id="chatHistory">
+                    <!-- 聊天记录会动态生成 -->
+                </div>
+            </div>
+
+            <!-- 主聊天区域 -->
+            <div class="main-chat">
+                <div class="chat-header">
+                    <div id="chatHeader">规划型助手</div>
+                    <button class="language-toggle" onclick="toggleLanguage()" id="langBtn3">EN</button>
+                </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <!-- 消息会动态生成 -->
+                </div>
+                
+                <div class="chat-input-container">
+                    <textarea class="chat-input" id="messageInput" placeholder="输入你的问题..." onkeydown="handleKeyPress(event)" rows="1"></textarea>
+                    <button class="send-btn" onclick="sendMessage()" id="sendBtn">发送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="TN.js"></script>
+</body>
+</html>
