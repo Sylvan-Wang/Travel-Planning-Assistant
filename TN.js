@@ -25,8 +25,8 @@ const texts = {
         },
         welcomeMessages: {
             planning: "你好！我是你的欧洲旅行规划助手。我会帮你制定详细安全的行程计划。请告诉我你计划去欧洲哪些国家或城市？",
-            social: "你好！我是你的欧洲旅行关系助手。我会帮你创造美好回忆和拍摄完美照片。请告诉我你和谁一起旅行？",
-            cultural: "你好！我是你的欧洲旅行体验助手。我会帮你发现独特的当地文化体验。请告诉我你对哪种文化体验最感兴趣？"
+            social: "你好！我是你的欧洲旅行关系助手。我会帮你创造美好回忆和拍摄完美照片。请告诉我你和谁一起旅行，计划去欧洲哪些国家或城市？",
+            cultural: "你好！我是你的欧洲旅行体验助手。我会帮你发现独特的当地文化体验。请告诉我你计划去欧洲哪些国家或城市？"
         },
         inputPlaceholder: "输入你的问题...",
         sendBtn: "发送",
@@ -437,5 +437,6 @@ function replaceLastAIMessage(newText) {
 
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', init);
+
 
 
