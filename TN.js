@@ -337,21 +337,41 @@ function handleKeyPress(event) {
 }
 
 // 发送消息
-function sendMessage() {
+async function sendMessage() {
     const input = document.getElementById('messageInput');
     const message = input.value.trim();
-    
+
     if (!message || !currentChatId) return;
-    
+
     // 添加用户消息
     addMessage(message, 'user');
     input.value = '';
-    
-    // 模拟AI回复
-    setTimeout(() => {
-        const aiResponse = generateAIResponse(message);
-        addMessage(aiResponse, 'ai');
-    }, 1000);
+
+    // 添加 AI “思考中...”占位
+    addMessage("旅游助手 正在努力思考中💦...", 'ai');
+
+    try {
+        const response = await fetch("https://eliot0110-travel-assistant.hf.space/api/chat", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: message,
+                session_id: null,
+                history: []
+            })
+        });
+
+        const data = await response.json();
+        const aiReply = data.reply || "抱歉，旅游助手已经努力过了🥹";
+
+        replaceLastAIMessage(aiReply);
+
+    } catch (error) {
+        replaceLastAIMessage("❌ 请求失败，请检查网络连接或稍后再问旅游助手😵");
+        console.error("API 请求错误：", error);
+    }
 }
 
 // 添加消息到聊天界面
@@ -373,48 +393,22 @@ function addMessage(text, sender) {
     saveChatSessions();
 }
 
-// 生成AI回复（简单模拟）
-function generateAIResponse(userMessage) {
-    const responses = {
-        zh: {
-            planning: [
-                "好的，我建议您提前预订所有交通和住宿，并准备备用计划。需要我帮您制定详细的时间表吗？",
-                "为了确保安全，建议您购买旅行保险并了解当地的紧急联系方式。还有什么具体的安全问题需要咨询吗？",
-                "我可以帮您规划最优的路线，避开人流高峰期。请告诉我您的具体旅行日期。"
-            ],
-            social: [
-                "这听起来很棒！我推荐一些适合拍照的网红景点和最佳拍摄时间。您希望拍什么风格的照片？",
-                "为了创造美好回忆，建议您安排一些团体活动，比如当地美食体验或音乐会。需要具体推荐吗？",
-                "我可以推荐一些适合和朋友一起体验的活动，让您的旅行更加难忘！"
-            ],
-            cultural: [
-                "太好了！我建议您参加当地的文化工作坊或传统节庆活动。您对哪个国家的文化最感兴趣？",
-                "为了深度体验，推荐您选择民宿而非酒店，这样能更好地感受当地生活方式。",
-                "我可以为您推荐一些隐藏的文化宝地，让您获得独特的心灵体验。"
-            ]
-        },
-        en: {
-            planning: [
-                "Great! I suggest booking all transportation and accommodation in advance and preparing backup plans. Would you like me to help create a detailed schedule?",
-                "For safety, I recommend purchasing travel insurance and knowing local emergency contacts. Any specific safety concerns?",
-                "I can help plan the optimal route avoiding peak hours. Please tell me your specific travel dates."
-            ],
-            social: [
-                "That sounds wonderful! I recommend some Instagram-worthy spots and best photography times. What style of photos are you hoping to take?",
-                "To create beautiful memories, consider group activities like local food experiences or concerts. Need specific recommendations?",
-                "I can suggest activities perfect for experiencing with friends to make your trip unforgettable!"
-            ],
-            cultural: [
-                "Excellent! I suggest joining local cultural workshops or traditional festivals. Which country's culture interests you most?",
-                "For deep cultural immersion, I recommend choosing homestays over hotels to better experience local lifestyle.",
-                "I can recommend hidden cultural gems for unique spiritual experiences."
-            ]
+function replaceLastAIMessage(newText) {
+    const chat = chatSessions.find(c => c.id === currentChatId);
+    if (!chat || chat.messages.length === 0) return;
+
+    for (let i = chat.messages.length - 1; i >= 0; i--) {
+        if (chat.messages[i].sender === 'ai') {
+            chat.messages[i].text = newText;
+            break;
         }
-    };
-    
-    const personaResponses = responses[currentLanguage][selectedPersona];
-    return personaResponses[Math.floor(Math.random() * personaResponses.length)];
+    }
+
+    updateChatInterface();
+    renderChatHistory();
+    saveChatSessions();
 }
 
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', init);
+
