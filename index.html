@@ -93,7 +93,10 @@
             <div class="main-chat">
                 <div class="chat-header">
                     <div id="chatHeader">规划型助手</div>
-                    <button class="language-toggle" onclick="toggleLanguage()" id="langBtn3">EN</button>
+                     <div style="display: flex; gap: 8px;">
+                         <button class="language-toggle" onclick="toggleLanguage()" id="langBtn3">EN</button>
+                         <button class="exit-btn" onclick="returnToWelcome()">退出</button>
+                     </div>
                 </div>
                 
                 <div class="chat-messages" id="chatMessages">
