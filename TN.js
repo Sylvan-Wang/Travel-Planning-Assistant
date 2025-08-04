@@ -374,12 +374,13 @@ async function sendMessage() {
     } catch (error) {
         replaceLastAIMessage("❌ 请求失败，请检查网络连接或稍后再问旅游助手😵");
         console.error("API 请求错误：", error);
-    } finally {
-        // 解锁按钮
+      } finally {
+        // 🔓 解锁按钮和输入框
         sendBtn.disabled = false;
+        input.disabled = false;
         sendBtn.textContent = texts[currentLanguage].sendBtn;
+        input.focus(); // 自动聚焦回输入框
     }
-}
 
 // 退出并返回欢迎页面
 function returnToWelcome() {
@@ -437,6 +438,7 @@ function replaceLastAIMessage(newText) {
 
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', init);
+
 
 
 
