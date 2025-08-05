@@ -439,12 +439,6 @@ async function sendMessage() {
         console.log(`📋 当前后端session: ${currentChat.backendSessionId || 'null(首次)'}`);
         // 🔄 persona 映射
         
-        const personaKeyMap = {
-            planning: 'planner',
-            social: 'social',
-            cultural: 'experiential'
-        };
-
         // 🔑 构建请求数据 - 关键修复
         const requestData = {
             message: message,
@@ -645,5 +639,6 @@ document.addEventListener('DOMContentLoaded', init);
 console.log("🔧 Session管理修复已加载！");
 console.log("📝 使用 testSessionManagement() 检查状态");
 console.log("💡 现在发送消息应该能正确累积信息了！");
+
 
 
