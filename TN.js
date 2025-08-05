@@ -151,7 +151,7 @@ function updateTexts() {
         'confirmBtn': t.confirmBtn,
         'sendBtn': t.sendBtn,
         'chatHistoryTitle': t.chatHistoryTitle,
-        'newChatBtn': t.newChatBtn
+        'newChatBtn': t.newChatBtn,
         'exitBtn': t.exitBtn
     };
 
@@ -662,6 +662,7 @@ document.addEventListener('DOMContentLoaded', init);
 console.log("🔧 Session管理修复已加载！");
 console.log("📝 使用 testSessionManagement() 检查状态");
 console.log("💡 现在发送消息应该能正确累积信息了！");
+
 
 
 
