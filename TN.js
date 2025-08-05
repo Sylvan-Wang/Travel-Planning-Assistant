@@ -29,10 +29,10 @@ const texts = {
             cultural: "你好！我是你的欧洲旅行体验助手。我会帮你发现独特的当地文化体验。请告诉我你计划去欧洲哪些国家或城市？"
         },
         inputPlaceholder: "输入你的问题...",
-        exitBtn: "Exit",
         sendBtn: "发送",
         chatHistoryTitle: "聊天记录",
-        newChatBtn: "新对话"
+        newChatBtn: "新对话"，
+        exitBtn: "退出"
     },
     en: {
         greeting: "Good Morning, Traveler",
@@ -56,10 +56,10 @@ const texts = {
             cultural: "Hello! I'm your European travel cultural assistant. I'll help you discover unique local cultural experiences. What kind of cultural experience interests you most?"
         },
         inputPlaceholder: "Type your question...",
-        exitBtn: "Exit",
         sendBtn: "Send",
         chatHistoryTitle: "Chat History",
-        newChatBtn: "New Chat"
+        newChatBtn: "New Chat"，
+        exitBtn: "Exit"
     }
 };
 
@@ -662,6 +662,7 @@ document.addEventListener('DOMContentLoaded', init);
 console.log("🔧 Session管理修复已加载！");
 console.log("📝 使用 testSessionManagement() 检查状态");
 console.log("💡 现在发送消息应该能正确累积信息了！");
+
 
 
 
