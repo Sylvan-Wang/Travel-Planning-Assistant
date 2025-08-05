@@ -158,10 +158,11 @@ function updateTexts() {
     });
 
     // 更新语言按钮
-    const langBtn = document.getElementById('langBtn');
-    if (langBtn) {
-        langBtn.textContent = currentLanguage === 'zh' ? 'EN' : '中';
-    }
+    const langLabel = currentLanguage === 'zh' ? 'EN' : '中';
+    ['langBtn', 'langBtn2', 'langBtn3'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.textContent = langLabel;
+    });
 
     // 更新输入框占位符
     const input = document.getElementById('messageInput');
@@ -654,6 +655,7 @@ document.addEventListener('DOMContentLoaded', init);
 console.log("🔧 Session管理修复已加载！");
 console.log("📝 使用 testSessionManagement() 检查状态");
 console.log("💡 现在发送消息应该能正确累积信息了！");
+
 
 
 
