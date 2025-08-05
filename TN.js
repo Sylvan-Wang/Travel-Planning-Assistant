@@ -152,7 +152,7 @@ function updateTexts() {
         'sendBtn': t.sendBtn,
         'chatHistoryTitle': t.chatHistoryTitle,
         'newChatBtn': t.newChatBtn,
-        'exitBtn': t.exitBtn
+        'exitBtn': t.exitBtn,
     };
 
     Object.entries(elements).forEach(([id, text]) => {
@@ -662,6 +662,7 @@ document.addEventListener('DOMContentLoaded', init);
 console.log("🔧 Session管理修复已加载！");
 console.log("📝 使用 testSessionManagement() 检查状态");
 console.log("💡 现在发送消息应该能正确累积信息了！");
+
 
 
 
