@@ -355,27 +355,36 @@ function deleteChatSession(chatId, event) {
 
 // 格式化日期
 function formatDate(date) {
-    // 转换为 Date 类型
-    date = new Date(date);
+    console.log("🧪 调试 formatDate 输入类型和内容:", date, typeof date);
 
-    // 如果不是合法时间对象，返回默认占位
-    if (isNaN(date.getTime())) {
+    try {
+        // 强制转换为 Date 对象
+        date = new Date(date);
+
+        // 判断是否有效
+        if (isNaN(date.getTime())) {
+            console.warn("⚠️ 无效日期，返回占位");
+            return currentLanguage === 'zh' ? '未知时间' : 'Unknown';
+        }
+
+        const now = new Date();
+        const diff = now - date;
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
+
+        if (minutes < 1) return currentLanguage === 'zh' ? '刚刚' : 'Just now';
+        if (minutes < 60) return currentLanguage === 'zh' ? `${minutes}分钟前` : `${minutes}m ago`;
+        if (hours < 24) return currentLanguage === 'zh' ? `${hours}小时前` : `${hours}h ago`;
+        if (days < 7) return currentLanguage === 'zh' ? `${days}天前` : `${days}d ago`;
+
+        return date.toLocaleDateString();
+    } catch (error) {
+        console.error("❌ formatDate 彻底失败:", error);
         return currentLanguage === 'zh' ? '未知时间' : 'Unknown';
     }
-
-    const now = new Date();
-    const diff = now - date;
-    const minutes = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
-
-    if (minutes < 1) return currentLanguage === 'zh' ? '刚刚' : 'Just now';
-    if (minutes < 60) return currentLanguage === 'zh' ? `${minutes}分钟前` : `${minutes}m ago`;
-    if (hours < 24) return currentLanguage === 'zh' ? `${hours}小时前` : `${hours}h ago`;
-    if (days < 7) return currentLanguage === 'zh' ? `${days}天前` : `${days}d ago`;
-
-    return date.toLocaleDateString();
 }
+
 
 // 🔧 7. 修改保存函数 - 包含 backendSessionId
 function saveChatSessions() {
@@ -647,6 +656,7 @@ document.addEventListener('DOMContentLoaded', init);
 console.log("🔧 Session管理修复已加载！");
 console.log("📝 使用 testSessionManagement() 检查状态");
 console.log("💡 现在发送消息应该能正确累积信息了！");
+
 
 
 
