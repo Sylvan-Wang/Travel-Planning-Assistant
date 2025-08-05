@@ -197,6 +197,13 @@ function showPersonaSelection() {
     currentPage = 'persona';
 }
 
+// 🔓 显式暴露函数到全局作用域
+window.toggleLanguage = toggleLanguage;
+window.showPersonaSelection = showPersonaSelection;
+window.confirmPersona = confirmPersona;
+window.selectPersona = selectPersona;
+window.returnToWelcome = returnToWelcome;
+
 // 选择persona
 function selectPersona(type) {
     // 移除之前的选择
@@ -662,6 +669,7 @@ document.addEventListener('DOMContentLoaded', init);
 console.log("🔧 Session管理修复已加载！");
 console.log("📝 使用 testSessionManagement() 检查状态");
 console.log("💡 现在发送消息应该能正确累积信息了！");
+
 
 
 
