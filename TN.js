@@ -282,7 +282,7 @@ function deleteChatSession(chatId, event) {
             currentChatId = null;
             document.getElementById('chatMessages').innerHTML = `
                 <div class="empty-state">
-                    <div class="empty-state-icon">🤖</div>
+                    <div class="empty-state-icon">( •̀ ω •́ )✧</div>
                     <div>${currentLanguage === 'zh' ? '请创建新对话开始聊天' : 'Create a new chat to start conversation'}</div>
                 </div>
             `;
@@ -439,4 +439,5 @@ function replaceLastAIMessage(newText) {
 
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', init);
+
 
