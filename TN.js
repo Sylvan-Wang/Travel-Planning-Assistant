@@ -61,6 +61,43 @@ const texts = {
     }
 };
 
+// ✅ 放这里：在 init() 之前插入你的函数
+function loadChatSessions() {
+    try {
+        const saved = localStorage.getItem('travel_chat_sessions');
+        if (saved) {
+            const data = JSON.parse(saved);
+            if (data.version === '2.0' && Array.isArray(data.sessions)) {
+                chatSessions = data.sessions;
+                currentChatId = data.currentChatId;
+                selectedPersona = data.selectedPersona;
+                
+                chatSessions.forEach(chat => {
+                    if (!chat.travelInfo) {
+                        chat.travelInfo = {
+                            destination: null,
+                            duration: null,
+                            budget: null,
+                            persona: chat.persona
+                        };
+                    }
+                    if (!chat.backendSessionId) {
+                        chat.backendSessionId = null;
+                    }
+                });
+                
+                console.log('📂 聊天记录已加载:', chatSessions.length, '个会话');
+            } else {
+                localStorage.removeItem('travel_chat_sessions');
+                console.log('🧹 清理旧版本数据');
+            }
+        }
+    } catch (error) {
+        console.error('❌ 加载聊天记录失败:', error);
+        chatSessions = [];
+    }
+}
+
 // 初始化
 function init() {
     updateTime();
@@ -186,12 +223,14 @@ function confirmPersona() {
 }
 
 // 创建新聊天
+// 🔧 2. 修改 createNewChat 函数 - 添加 backendSessionId 字段
 function createNewChat() {
     const chatId = 'chat_' + Date.now();
     const t = texts[currentLanguage];
     
     const newChat = {
-        id: chatId,
+        id: chatId, // 前端对话ID
+        backendSessionId: null, // 🔑 关键：后端session_id，首次为null
         persona: selectedPersona,
         title: t.chatHeaders[selectedPersona] || 'New Chat',
         messages: [{
@@ -200,7 +239,13 @@ function createNewChat() {
             timestamp: new Date()
         }],
         createdAt: new Date(),
-        lastMessage: t.welcomeMessages[selectedPersona] || 'Hello! How can I help you?'
+        lastMessage: t.welcomeMessages[selectedPersona] || 'Hello! How can I help you?',
+        travelInfo: { // 🔑 旅行信息状态跟踪
+            destination: null,
+            duration: null,
+            budget: null,
+            persona: selectedPersona
+        }
     };
     
     chatSessions.unshift(newChat);
@@ -209,17 +254,32 @@ function createNewChat() {
     updateChatInterface();
     renderChatHistory();
     saveChatSessions();
+    
+    console.log(`🆕 创建新对话: ${chatId}, persona: ${selectedPersona}`);
 }
 
 // 切换聊天会话
 function switchToChat(chatId) {
-    currentChatId = chatId;
+    console.log(`🔄 切换到对话: ${chatId}`);
+    
     const chat = chatSessions.find(c => c.id === chatId);
-    if (chat) {
-        selectedPersona = chat.persona;
-        updateChatInterface();
-        renderChatHistory();
+    if (!chat) {
+        console.error(`❌ 找不到对话: ${chatId}`);
+        return;
     }
+    
+    currentChatId = chatId;
+    selectedPersona = chat.persona;
+    
+    console.log(`📋 对话信息:`);
+    console.log(`   - 前端ID: ${chat.id}`);
+    console.log(`   - 后端Session: ${chat.backendSessionId || 'null'}`);
+    console.log(`   - Persona: ${chat.persona}`);
+    console.log(`   - 消息数: ${chat.messages.length}`);
+    console.log(`   - 旅行信息:`, chat.travelInfo);
+    
+    updateChatInterface();
+    renderChatHistory();
 }
 
 // 更新聊天界面
@@ -309,14 +369,20 @@ function formatDate(date) {
     return date.toLocaleDateString();
 }
 
-// 保存聊天记录
+// 🔧 7. 修改保存函数 - 包含 backendSessionId
 function saveChatSessions() {
-    console.log('聊天记录已保存:', chatSessions.length, '个会话');
-}
-
-// 加载聊天记录
-function loadChatSessions() {
-    chatSessions = [];
+    try {
+        const dataToSave = {
+            sessions: chatSessions,
+            currentChatId: currentChatId,
+            selectedPersona: selectedPersona,
+            version: '2.0' // 版本标记
+        };
+        localStorage.setItem('travel_chat_sessions', JSON.stringify(dataToSave));
+        console.log('💾 聊天记录已保存:', chatSessions.length, '个会话');
+    } catch (error) {
+        console.error('❌ 保存聊天记录失败:', error);
+    }
 }
 
 // 添加消息到DOM
@@ -343,46 +409,150 @@ async function sendMessage() {
 
     if (!message || !currentChatId) return;
 
-    // 锁定按钮
+    // 🔑 获取当前对话
+    const currentChat = chatSessions.find(c => c.id === currentChatId);
+    if (!currentChat) {
+        console.error('❌ 找不到当前对话');
+        return;
+    }
+
+    // 锁定UI
     sendBtn.disabled = true;
+    input.disabled = true;
     sendBtn.textContent = currentLanguage === 'zh' ? "思考中..." : "Thinking...";
 
-    // 添加用户消息
+    // 添加用户消息到界面
     addMessage(message, 'user');
     input.value = '';
 
-    // 添加 AI 占位
+    // 添加AI占位消息
     addMessage("旅游助手 正在努力思考中💦...", 'ai');
 
     try {
+        console.log(`📤 发送消息到对话 ${currentChatId}`);
+        console.log(`📋 当前后端session: ${currentChat.backendSessionId || 'null(首次)'}`);
+        
+        // 🔑 构建请求数据 - 关键修复
+        const requestData = {
+            message: message,
+            session_id: currentChat.backendSessionId, // 🔑 传递后端session_id
+            persona_key: currentChat.persona,
+            history: currentChat.messages
+                .filter(m => !m.text.includes('思考中')) // 过滤占位消息
+                .map(m => [m.text, m.sender]) // 转换格式
+        };
+
+        console.log('📤 发送请求数据:', {
+            message: message.substring(0, 20) + '...',
+            session_id: requestData.session_id,
+            persona_key: requestData.persona_key,
+            history_length: requestData.history.length
+        });
+
         const response = await fetch("https://eliot0110-travel-assistant.hf.space/api/chat", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-         body: JSON.stringify({
-            message: message,
-            session_id: currentChatId,
-            history: chatSessions.find(c => c.id === currentChatId)?.messages.map(m => [m.sender, m.text]) || [],
-            persona_key: selectedPersona
-         })
+            body: JSON.stringify(requestData)
         });
 
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
         const data = await response.json();
+        
+        console.log('📥 收到响应:', {
+            session_id: data.session_id,
+            reply_length: data.reply?.length || 0,
+            status_info: data.status_info ? Object.keys(data.status_info) : []
+        });
+        
+        // 🔑 保存后端返回的session_id - 关键步骤！
+        if (data.session_id) {
+            if (currentChat.backendSessionId !== data.session_id) {
+                console.log(`💾 更新后端session: ${currentChat.backendSessionId} → ${data.session_id}`);
+                currentChat.backendSessionId = data.session_id;
+            }
+        }
+
+        // 🔑 更新旅行信息状态
+        if (data.status_info) {
+            updateTravelInfo(currentChat, data.status_info);
+        }
+
+        // 替换AI回复
         const aiReply = data.reply || "抱歉，旅游助手已经努力过了🥹";
         replaceLastAIMessage(aiReply);
 
+        // 智能更新对话标题
+        updateChatTitle(currentChat);
+
+        console.log('✅ 消息发送成功');
+
     } catch (error) {
+        console.error("❌ API请求错误：", error);
         replaceLastAIMessage("❌ 请求失败，请检查网络连接或稍后再问旅游助手😵");
-        console.error("API 请求错误：", error);
-      } finally {
-        // 🔓 解锁按钮和输入框
+    } finally {
+        // 解锁UI
         sendBtn.disabled = false;
         input.disabled = false;
         sendBtn.textContent = texts[currentLanguage].sendBtn;
-        input.focus(); // 自动聚焦回输入框
+        input.focus();
     }
 }
+
+// 🔧 4. 新增：更新旅行信息状态
+function updateTravelInfo(chat, statusInfo) {
+    console.log('📊 更新旅行信息:', statusInfo);
+    
+    // 更新目的地
+    if (statusInfo.destination && statusInfo.destination.status === 'completed') {
+        chat.travelInfo.destination = statusInfo.destination.name;
+        console.log(`🏙️ 目的地已设置: ${statusInfo.destination.name}`);
+    }
+    
+    // 更新天数
+    if (statusInfo.duration && statusInfo.duration.status === 'completed') {
+        chat.travelInfo.duration = statusInfo.duration.days;
+        console.log(`⏰ 天数已设置: ${statusInfo.duration.days}天`);
+    }
+    
+    // 更新预算
+    if (statusInfo.budget && statusInfo.budget.status === 'completed') {
+        chat.travelInfo.budget = statusInfo.budget.description;
+        console.log(`💰 预算已设置: ${statusInfo.budget.description}`);
+    }
+    
+    // 计算完成进度
+    const completedItems = [
+        chat.travelInfo.destination,
+        chat.travelInfo.duration, 
+        chat.travelInfo.budget
+    ].filter(item => item !== null).length;
+    
+    console.log(`📈 信息收集进度: ${completedItems}/3`);
+}
+
+// 🔧 5. 新增：智能更新对话标题
+function updateChatTitle(chat) {
+    const info = chat.travelInfo;
+    const t = texts[currentLanguage];
+    
+    if (info.destination && info.duration) {
+        chat.title = `${info.destination} ${info.duration}天`;
+    } else if (info.destination) {
+        chat.title = `${info.destination}旅行`;
+    } else {
+        // 保持原有的persona标题
+        chat.title = t.chatHeaders[chat.persona] || 'New Chat';
+    }
+    
+    console.log(`🏷️ 更新对话标题: ${chat.title}`);
+}
+
+
 // 退出并返回欢迎页面
 function returnToWelcome() {
     // 清除所有 active 页面
@@ -436,8 +606,30 @@ function replaceLastAIMessage(newText) {
     renderChatHistory();
     saveChatSessions();
 }
-
+// 🎯 9. 测试函数 - 验证session管理
+function testSessionManagement() {
+    console.log("🧪 === 测试Session管理 ===");
+    
+    // 显示当前状态
+    console.log("📊 当前状态:");
+    console.log(`   - currentChatId: ${currentChatId}`);
+    console.log(`   - chatSessions数量: ${chatSessions.length}`);
+    
+    if (currentChatId) {
+        const currentChat = chatSessions.find(c => c.id === currentChatId);
+        if (currentChat) {
+            console.log(`   - 当前对话后端session: ${currentChat.backendSessionId}`);
+            console.log(`   - 旅行信息:`, currentChat.travelInfo);
+        }
+    }
+    
+    console.log("🧪 === 测试完成 ===");
+}
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', init);
 
+// 🎯 10. 立即执行修复
+console.log("🔧 Session管理修复已加载！");
+console.log("📝 使用 testSessionManagement() 检查状态");
+console.log("💡 现在发送消息应该能正确累积信息了！");
 
