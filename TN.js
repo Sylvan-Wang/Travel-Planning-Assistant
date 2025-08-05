@@ -355,17 +355,21 @@ function deleteChatSession(chatId, event) {
 
 // 格式化日期
 function formatDate(date) {
+    if (!(date instanceof Date)) {
+        date = new Date(date);  // 👈 强制转换为 Date 对象
+    }
+
     const now = new Date();
     const diff = now - date;
     const minutes = Math.floor(diff / 60000);
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
-    
+
     if (minutes < 1) return currentLanguage === 'zh' ? '刚刚' : 'Just now';
     if (minutes < 60) return currentLanguage === 'zh' ? `${minutes}分钟前` : `${minutes}m ago`;
     if (hours < 24) return currentLanguage === 'zh' ? `${hours}小时前` : `${hours}h ago`;
     if (days < 7) return currentLanguage === 'zh' ? `${days}天前` : `${days}d ago`;
-    
+
     return date.toLocaleDateString();
 }
 
@@ -639,6 +643,7 @@ document.addEventListener('DOMContentLoaded', init);
 console.log("🔧 Session管理修复已加载！");
 console.log("📝 使用 testSessionManagement() 检查状态");
 console.log("💡 现在发送消息应该能正确累积信息了！");
+
 
 
 
