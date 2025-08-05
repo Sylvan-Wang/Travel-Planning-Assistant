@@ -353,22 +353,21 @@ function deleteChatSession(chatId, event) {
     saveChatSessions();
 }
 
-// 格式化日期
-function formatDate(date) {
-    console.log("🧪 调试 formatDate 输入类型和内容:", date, typeof date);
+// 格式化日期（处理所有异常情况）
+function formatDate(dateInput) {
+    console.log("🧪 调试 formatDate 输入:", dateInput, "| 类型:", typeof dateInput);
 
     try {
-        // 强制转换为 Date 对象
-        date = new Date(date);
+        const parsedDate = new Date(dateInput);
 
-        // 判断是否有效
-        if (isNaN(date.getTime())) {
+        // 如果转换失败（如传入的是 undefined、{}、空字符串等）
+        if (isNaN(parsedDate.getTime())) {
             console.warn("⚠️ 无效日期，返回占位");
             return currentLanguage === 'zh' ? '未知时间' : 'Unknown';
         }
 
         const now = new Date();
-        const diff = now - date;
+        const diff = now - parsedDate;
         const minutes = Math.floor(diff / 60000);
         const hours = Math.floor(diff / 3600000);
         const days = Math.floor(diff / 86400000);
@@ -378,13 +377,12 @@ function formatDate(date) {
         if (hours < 24) return currentLanguage === 'zh' ? `${hours}小时前` : `${hours}h ago`;
         if (days < 7) return currentLanguage === 'zh' ? `${days}天前` : `${days}d ago`;
 
-        return date.toLocaleDateString();
+        return parsedDate.toLocaleDateString(); // ✅ 格式化输出
     } catch (error) {
-        console.error("❌ formatDate 彻底失败:", error);
+        console.error("❌ formatDate 彻底失败:", error, "原始输入：", dateInput);
         return currentLanguage === 'zh' ? '未知时间' : 'Unknown';
     }
 }
-
 
 // 🔧 7. 修改保存函数 - 包含 backendSessionId
 function saveChatSessions() {
@@ -656,6 +654,7 @@ document.addEventListener('DOMContentLoaded', init);
 console.log("🔧 Session管理修复已加载！");
 console.log("📝 使用 testSessionManagement() 检查状态");
 console.log("💡 现在发送消息应该能正确累积信息了！");
+
 
 
 
