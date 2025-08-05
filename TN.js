@@ -31,7 +31,7 @@ const texts = {
         inputPlaceholder: "输入你的问题...",
         sendBtn: "发送",
         chatHistoryTitle: "聊天记录",
-        newChatBtn: "新对话"，
+        newChatBtn: "新对话",
         exitBtn: "退出"
     },
     en: {
@@ -58,7 +58,7 @@ const texts = {
         inputPlaceholder: "Type your question...",
         sendBtn: "Send",
         chatHistoryTitle: "Chat History",
-        newChatBtn: "New Chat"，
+        newChatBtn: "New Chat",
         exitBtn: "Exit"
     }
 };
@@ -662,6 +662,7 @@ document.addEventListener('DOMContentLoaded', init);
 console.log("🔧 Session管理修复已加载！");
 console.log("📝 使用 testSessionManagement() 检查状态");
 console.log("💡 现在发送消息应该能正确累积信息了！");
+
 
 
 
