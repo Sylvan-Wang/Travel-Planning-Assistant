@@ -304,7 +304,11 @@ function updateChatInterface() {
             addMessageToDOM(msg.text, msg.sender);
         });
     }
+
+    // ✅ 保证语言按钮等组件也更新
+    updateTexts();
 }
+
 
 // 渲染聊天历史
 function renderChatHistory() {
@@ -657,6 +661,7 @@ document.addEventListener('DOMContentLoaded', init);
 console.log("🔧 Session管理修复已加载！");
 console.log("📝 使用 testSessionManagement() 检查状态");
 console.log("💡 现在发送消息应该能正确累积信息了！");
+
 
 
 
