@@ -355,8 +355,12 @@ function deleteChatSession(chatId, event) {
 
 // 格式化日期
 function formatDate(date) {
-    if (!(date instanceof Date)) {
-        date = new Date(date);  // 👈 强制转换为 Date 对象
+    // 转换为 Date 类型
+    date = new Date(date);
+
+    // 如果不是合法时间对象，返回默认占位
+    if (isNaN(date.getTime())) {
+        return currentLanguage === 'zh' ? '未知时间' : 'Unknown';
     }
 
     const now = new Date();
@@ -643,6 +647,7 @@ document.addEventListener('DOMContentLoaded', init);
 console.log("🔧 Session管理修复已加载！");
 console.log("📝 使用 testSessionManagement() 检查状态");
 console.log("💡 现在发送消息应该能正确累积信息了！");
+
 
 
 
