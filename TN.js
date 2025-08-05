@@ -415,7 +415,13 @@ async function sendMessage() {
         console.error('❌ 找不到当前对话');
         return;
     }
-
+    // persona_key映射表
+    const personaKeyMap = {
+        planning: 'planner',
+        social: 'social',
+        cultural: 'experiential'
+    };
+    
     // 锁定UI
     sendBtn.disabled = true;
     input.disabled = true;
@@ -431,12 +437,19 @@ async function sendMessage() {
     try {
         console.log(`📤 发送消息到对话 ${currentChatId}`);
         console.log(`📋 当前后端session: ${currentChat.backendSessionId || 'null(首次)'}`);
+        // 🔄 persona 映射
         
+        const personaKeyMap = {
+            planning: 'planner',
+            social: 'social',
+            cultural: 'experiential'
+        };
+
         // 🔑 构建请求数据 - 关键修复
         const requestData = {
             message: message,
             session_id: currentChat.backendSessionId, // 🔑 传递后端session_id
-            persona_key: currentChat.persona,
+            persona_key: personaKeyMap[currentChat.persona], // ✅ 使用映射值
             history: currentChat.messages
                 .filter(m => !m.text.includes('思考中')) // 过滤占位消息
                 .map(m => [m.text, m.sender]) // 转换格式
@@ -632,4 +645,5 @@ document.addEventListener('DOMContentLoaded', init);
 console.log("🔧 Session管理修复已加载！");
 console.log("📝 使用 testSessionManagement() 检查状态");
 console.log("💡 现在发送消息应该能正确累积信息了！");
+
 
