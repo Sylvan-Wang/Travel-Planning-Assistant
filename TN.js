@@ -736,7 +736,7 @@ function sendAudioToServer(audioBlob) {
     formData.append("audio", audioBlob);
 
     // 这里要替换地址要替换地址要替换接口地址
-    fetch("https://your-api-url/whisper/transcribe", {
+    fetch("https://sylvan-wang.github.io/Travel-Planning-Assistant/", {
         method: "POST",
         body: formData
     })
@@ -750,6 +750,7 @@ function sendAudioToServer(audioBlob) {
         alert("语音识别失败，请重试！");
     });
 }
+
 
 
 
