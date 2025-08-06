@@ -716,29 +716,16 @@ function startVoiceInput() {
 }
 
 
-function showlisteningOverlay() {
-    const popup = document.getElementById("listeningOverlay");
-    popup.style.display = "flex";
+function showListeningOverlay() {
+    const overlay = document.getElementById("listeningOverlay");
+    overlay.classList.remove("hidden");
 }
 
-function hidelisteningOverlay() {
-    const popup = document.getElementById("listeningOverlay");
-    popup.style.display = "none";
+function hideListeningOverlay() {
+    const overlay = document.getElementById("listeningOverlay");
+    overlay.classList.add("hidden");
 }
 
-
-
-// 显示和隐藏弹窗
-
-function showlisteningOverlay() {
-    const popup = document.getElementById("listeningOverlay");
-    popup.style.display = "flex";
-}
-
-function hidelisteningOverlay() {
-    const popup = document.getElementById("listeningOverlay");
-    popup.style.display = "none";
-}
 
 // 发送语音到后端 + 回填输入框
 
@@ -761,6 +748,7 @@ function sendAudioToServer(audioBlob) {
         alert("语音识别失败，请重试！");
     });
 }
+
 
 
 
