@@ -32,6 +32,7 @@ const texts = {
         sendBtn: "发送",
         chatHistoryTitle: "聊天记录",
         newChatBtn: "新对话",
+        emptyChatTip: "请创建新对话开始聊天",
         exitBtn: "退出"
     },
     en: {
@@ -59,6 +60,7 @@ const texts = {
         sendBtn: "Send",
         chatHistoryTitle: "Chat History",
         newChatBtn: "New Chat",
+        emptyChatTip: "Create a new chat to start conversation",
         exitBtn: "Exit"
     }
 };
@@ -358,7 +360,7 @@ function deleteChatSession(chatId, event) {
             document.getElementById('chatMessages').innerHTML = `
                 <div class="empty-state">
                     <div class="empty-state-icon">( •̀ ω •́ )✧</div>
-                    <div>${currentLanguage === 'zh' ? '请创建新对话开始聊天' : 'Create a new chat to start conversation'}</div>
+                    <div>${texts[currentLanguage].emptyChatTip}</div>
                 </div>
             `;
         }
@@ -748,6 +750,7 @@ function sendAudioToServer(audioBlob) {
         alert("语音识别失败，请重试！");
     });
 }
+
 
 
 
