@@ -701,7 +701,7 @@ function startVoiceInput() {
             mediaRecorder.onstop = () => {
                 const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
                 sendAudioToServer(audioBlob);
-                hidelisteningOverlay();
+                hideListeningOverlay();
                 isRecording = false;
             };
 
@@ -712,7 +712,7 @@ function startVoiceInput() {
         })
         .catch(err => {
             alert("无法访问麦克风：" + err.message);
-            hidelisteningOverlay();
+            hideListeningOverlay();
             isRecording = false;
         });
 }
@@ -758,6 +758,7 @@ function stopRecordingFromOverlay() {
     hideListeningOverlay();
     isRecording = false;
 }
+
 
 
 
