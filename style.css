@@ -458,3 +458,22 @@ body {
     background-color: #c53030;
 }
 
+/* --- 麦克风按钮样式 --- */
+#voice-btn {
+  width: 36px;
+  height: 36px;
+  background: url('https://cdn-icons-png.flaticon.com/512/25/25682.png') center center no-repeat;
+  background-size: 20px;
+  border: none;
+  border-radius: 50%;
+  margin-left: 6px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+}
+
+/* --- 系统提示样式 --- */
+#system-hint {
+  margin: 8px 0 0 8px;
+  color: #999;
+  font-size: 0.9em;
+}
