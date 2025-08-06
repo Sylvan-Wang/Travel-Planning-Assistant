@@ -458,22 +458,90 @@ body {
     background-color: #c53030;
 }
 
-/* --- 麦克风按钮样式 --- */
-#voice-btn {
-  width: 36px;
-  height: 36px;
-  background: url('https://cdn-icons-png.flaticon.com/512/25/25682.png') center center no-repeat;
-  background-size: 20px;
-  border: none;
-  border-radius: 50%;
-  margin-left: 6px;
-  cursor: pointer;
-  background-color: #f0f0f0;
-}
-
 /* --- 系统提示样式 --- */
 #system-hint {
   margin: 8px 0 0 8px;
   color: #999;
   font-size: 0.9em;
 }
+/* ✅ 麦克风按钮样式 */
+.mic-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background-color: #f3f4f6;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.mic-btn:hover {
+    background-color: #e5e7eb;
+}
+
+/* ✅ 弹出层遮罩 */
+.listening-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 默认隐藏 */
+.hidden {
+    display: none;
+}
+
+/* ✅ 弹出内容卡片 */
+.listening-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 24px 32px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+/* ✅ 麦克风图标 */
+.mic-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+/* ✅ “...”文本 */
+.listening-text {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: #374151;
+}
+
+/* ✅ 简单的动画波浪（可选） */
+.wave-animation {
+    width: 120px;
+    height: 10px;
+    background: linear-gradient(to right, #93c5fd, #3b82f6, #93c5fd);
+    background-size: 200% 100%;
+    animation: waveMove 1.5s linear infinite;
+    border-radius: 8px;
+    margin: 0 auto;
+}
+
+@keyframes waveMove {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+/* ✅ 弹出层淡入动画 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
