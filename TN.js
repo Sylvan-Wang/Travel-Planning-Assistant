@@ -746,9 +746,17 @@ function sendAudioToServer(audioBlob) {
         document.getElementById("messageInput").value = transcript;
     })
     .catch(err => {
-        console.error("转录失败：", err);
-        alert("语音识别失败，请重试！");
+        console.error("⚠️⚠️error：", err);
+        alert("😵Please Try Again！");
     });
+}
+
+function stopRecordingFromOverlay() {
+    if (isRecording && mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+    }
+    hideListeningOverlay();
+    isRecording = false;
 }
 
 
