@@ -106,8 +106,17 @@
                 <div class="chat-input-container">
                      <textarea class="chat-input" id="messageInput" placeholder="输入你的问题..." onkeydown="handleKeyPress(event)" rows="1"></textarea>
 
-                     <!-- ✅ 新增麦克风按钮 -->
-                     <button id="voice-btn" onclick="startVoiceInput()" title="语音输入"></button>
+                     <!-- 语音输入按钮 -->
+                     <button class="mic-btn" onclick="toggleRecording()" id="micBtn">🎤</button>
+                    
+                     <!-- 语音监听弹窗 -->
+                     <div id="listeningOverlay" class="listening-overlay hidden" onclick="stopRecordingFromOverlay()">
+                       <div class="listening-card">
+                         <div class="mic-icon">🎙️</div>
+                         <div class="listening-text">...</div>
+                         <div class="wave-animation"></div>
+                       </div>
+                     </div>
 
                      <button class="send-btn" onclick="sendMessage()" id="sendBtn">发送</button>
                 </div>
@@ -120,6 +129,7 @@
 <script src="TN.js"></script>
 </body>
 </html>
+
 
 
 
