@@ -736,7 +736,7 @@ function sendAudioToServer(audioBlob) {
     formData.append("audio", audioBlob);
 
     // 这里要替换地址要替换地址要替换接口地址
-    fetch("https://eliot0110-travel-assistant.hf.space/api/whisper/transcribe", {
+    fetch(("https://eliot0110-travel-assistant.hf.space/api/whisper/transcribe"), {
         method: "POST",
         body: formData
     })
@@ -758,6 +758,7 @@ function stopRecordingFromOverlay() {
     hideListeningOverlay();
     isRecording = false;
 }
+
 
 
 
