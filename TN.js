@@ -686,7 +686,7 @@ function startVoiceInput() {
     if (isRecording) return;
 
     isRecording = true;
-    showlisteningOverlay();
+    showListeningOverlay();
 
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
@@ -750,6 +750,7 @@ function sendAudioToServer(audioBlob) {
         alert("语音识别失败，请重试！");
     });
 }
+
 
 
 
