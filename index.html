@@ -107,7 +107,7 @@
                      <textarea class="chat-input" id="messageInput" placeholder="输入你的问题..." onkeydown="handleKeyPress(event)" rows="1"></textarea>
 
                      <!-- 语音输入按钮 -->
-                     <button class="mic-btn" onclick="toggleRecording()" id="micBtn">🎤</button>
+                     <button class="mic-btn" onclick="startVoiceInput()" id="micBtn">🎤</button>
                     
                      <!-- 语音监听弹窗 -->
                      <div id="listeningOverlay" class="listening-overlay hidden" onclick="stopRecordingFromOverlay()">
@@ -129,6 +129,7 @@
 <script src="TN.js"></script>
 </body>
 </html>
+
 
 
 
