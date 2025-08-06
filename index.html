@@ -104,9 +104,15 @@
                 </div>
                 
                 <div class="chat-input-container">
-                    <textarea class="chat-input" id="messageInput" placeholder="输入你的问题..." onkeydown="handleKeyPress(event)" rows="1"></textarea>
-                    <button class="send-btn" onclick="sendMessage()" id="sendBtn">发送</button>
+                     <textarea class="chat-input" id="messageInput" placeholder="输入你的问题..." onkeydown="handleKeyPress(event)" rows="1"></textarea>
+
+                     <!-- ✅ 新增麦克风按钮 -->
+                     <button id="voice-btn" onclick="startVoiceInput()" title="语音输入"></button>
+
+                     <button class="send-btn" onclick="sendMessage()" id="sendBtn">发送</button>
                 </div>
+                <!-- ✅ 新增系统提示区域（可以放在 chatMessages 下或下方空位） -->
+                <div id="system-hint" class="hint-box"></div>
             </div>
         </div>
     </div>
@@ -114,6 +120,7 @@
 <script src="TN.js"></script>
 </body>
 </html>
+
 
 
 
