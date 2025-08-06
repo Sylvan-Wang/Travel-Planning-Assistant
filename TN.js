@@ -673,13 +673,94 @@ console.log("💡 现在发送消息应该能正确累积信息了！");
 
 
 
+// 语音输入功能
+
+let isRecording = false;
+let mediaRecorder;
+let audioChunks = [];
+
+// 主函数，麦克风触发
+function startVoiceInput() {
+    if (isRecording) return;
+
+    isRecording = true;
+    showListeningPopup();
+
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.start();
+
+            audioChunks = [];
+            mediaRecorder.ondataavailable = event => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                sendAudioToServer(audioBlob);
+                hideListeningPopup();
+                isRecording = false;
+            };
+
+            // 自动 60 秒后结束
+            setTimeout(() => {
+                mediaRecorder.stop();
+            }, 60000);
+        })
+        .catch(err => {
+            alert("无法访问麦克风：" + err.message);
+            hideListeningPopup();
+            isRecording = false;
+        });
+}
+
+
+function showListeningPopup() {
+    const popup = document.getElementById("listeningPopup");
+    popup.style.display = "flex";
+}
+
+function hideListeningPopup() {
+    const popup = document.getElementById("listeningPopup");
+    popup.style.display = "none";
+}
 
 
 
+// 显示和隐藏弹窗
 
+function showListeningPopup() {
+    const popup = document.getElementById("listeningPopup");
+    popup.style.display = "flex";
+}
 
+function hideListeningPopup() {
+    const popup = document.getElementById("listeningPopup");
+    popup.style.display = "none";
+}
 
+// 发送语音到后端 + 回填输入框
 
+function sendAudioToServer(audioBlob) {
+    const formData = new FormData();
+    formData.append("audio", audioBlob);
+
+    // 这里要替换地址要替换地址要替换接口地址
+    fetch("https://your-api-url/whisper/transcribe", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        const transcript = data.transcript;
+        document.getElementById("messageInput").value = transcript;
+    })
+    .catch(err => {
+        console.error("转录失败：", err);
+        alert("语音识别失败，请重试！");
+    });
+}
 
 
 
