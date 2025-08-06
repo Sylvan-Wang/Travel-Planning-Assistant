@@ -684,7 +684,7 @@ function startVoiceInput() {
     if (isRecording) return;
 
     isRecording = true;
-    showListeningPopup();
+    showlisteningOverlay();
 
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
@@ -699,7 +699,7 @@ function startVoiceInput() {
             mediaRecorder.onstop = () => {
                 const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
                 sendAudioToServer(audioBlob);
-                hideListeningPopup();
+                hidelisteningOverlay();
                 isRecording = false;
             };
 
@@ -710,19 +710,19 @@ function startVoiceInput() {
         })
         .catch(err => {
             alert("无法访问麦克风：" + err.message);
-            hideListeningPopup();
+            hidelisteningOverlay();
             isRecording = false;
         });
 }
 
 
-function showListeningPopup() {
-    const popup = document.getElementById("listeningPopup");
+function showlisteningOverlay() {
+    const popup = document.getElementById("listeningOverlay");
     popup.style.display = "flex";
 }
 
-function hideListeningPopup() {
-    const popup = document.getElementById("listeningPopup");
+function hidelisteningOverlay() {
+    const popup = document.getElementById("listeningOverlay");
     popup.style.display = "none";
 }
 
@@ -730,13 +730,13 @@ function hideListeningPopup() {
 
 // 显示和隐藏弹窗
 
-function showListeningPopup() {
-    const popup = document.getElementById("listeningPopup");
+function showlisteningOverlay() {
+    const popup = document.getElementById("listeningOverlay");
     popup.style.display = "flex";
 }
 
-function hideListeningPopup() {
-    const popup = document.getElementById("listeningPopup");
+function hidelisteningOverlay() {
+    const popup = document.getElementById("listeningOverlay");
     popup.style.display = "none";
 }
 
@@ -761,6 +761,7 @@ function sendAudioToServer(audioBlob) {
         alert("语音识别失败，请重试！");
     });
 }
+
 
 
 
